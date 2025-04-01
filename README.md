@@ -1,36 +1,153 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Яндекс API Прокси
 
-## Getting Started
+Приложение для работы с API Яндекс 360, обходящее ограничения CORS и предоставляющее удобный пользовательский интерфейс.
 
-First, run the development server:
+## Возможности
+
+- Авторизация через Яндекс OAuth
+- Просмотр профиля пользователя
+- Редактирование имени пользователя
+- Просмотр списка пользователей организации
+- Работа с API Яндекс 360 без проблем с CORS
+
+## Установка
+
+1. Клонируйте репозиторий:
+
+```bash
+git clone [ссылка на репозиторий]
+cd yandex-api
+```
+
+2. Установите зависимости:
+
+```bash
+npm install
+```
+
+3. Создайте файл `.env.local` на основе примера:
+
+```bash
+cp .env.example .env.local
+```
+
+4. Заполните переменные окружения в файле `.env.local`:
+
+- `ORG_ID` - ID вашей организации в Яндекс 360
+- `NEXT_PUBLIC_YANDEX_CLIENT_ID` - ID вашего приложения в Яндекс OAuth
+- `YANDEX_CLIENT_SECRET` - Секрет вашего приложения в Яндекс OAuth
+- `NEXTAUTH_SECRET` - Случайная строка для шифрования сессий (можно сгенерировать с помощью `openssl rand -base64 32`)
+
+## Получение ID организации
+
+ID организации можно получить из URL административной панели Яндекс 360:
+
+1. Войдите в административную панель Яндекс 360: https://admin.yandex.ru/
+2. Перейдите в раздел "Профиль организации"
+3. В URL будет содержаться ID организации: `https://admin.yandex.ru/company/{ID_организации}/profile`
+
+Или воспользуйтесь API Яндекс 360:
+
+1. Получите токен с правами `directory:read`
+2. Выполните запрос к `https://api360.yandex.net/directory/v1/org`
+
+## Запуск приложения
+
+Для удобства запуска в Windows PowerShell можно использовать скрипты:
+
+1. Настройка переменных окружения:
+
+```bash
+./setup-env.ps1
+```
+
+2. Запуск приложения:
+
+```bash
+./start.ps1
+```
+
+Или вручную:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Приложение будет доступно по адресу: http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Устранение неполадок
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Ошибка 400 Bad Request при загрузке пользователей
 
-## Learn More
+Проверьте следующее:
 
-To learn more about Next.js, take a look at the following resources:
+1. ID организации установлен правильно в файле `.env.local`
+2. Токен OAuth имеет право `directory:read`
+3. Приложение запущено с корректными переменными окружения
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Ошибка CORS при работе с API
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+В данном приложении используется прокси-сервер для обхода ограничений CORS. Если вы видите ошибки CORS, убедитесь, что запросы идут через прокси-эндпоинты (`/api/proxy/*`), а не напрямую к API Яндекса.
 
-## Deploy on Vercel
+## Технологии
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Next.js 14
+- React
+- Tailwind CSS
+- Axios
+- NextAuth.js
+- API Яндекс 360
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Структура проекта
+
+```
+/app
+  /api
+    /auth - Аутентификация через NextAuth.js
+    /proxy - Прокси-эндпоинты для API Яндекс
+      /user - Информация о пользователе
+      /users - Список пользователей организации
+  /components - React компоненты
+    /ui - Общие UI компоненты
+  /services - Сервисы для работы с API
+  /styles - CSS стили
+```
+
+## Основные возможности
+
+- Просмотр информации о пользователях
+- Редактирование имени пользователя
+- Интерфейс для работы с API Яндекс 360
+- Типизированные компоненты и сервисы
+
+## Настройка переменных окружения
+
+Для работы с API Яндекс 360 требуется указать ID вашей организации. Вы можете использовать скрипт `setup-env.ps1` для автоматической настройки или создать файл `.env.local` вручную со следующим содержимым:
+
+```
+ORG_ID=ваш_ID_организации
+```
+
+### Как получить ID организации в Яндекс 360
+
+1. Войдите в [Яндекс 360 для бизнеса](https://admin.yandex.ru/)
+2. Перейдите в раздел "Настройки организации"
+3. ID организации отображается в URL адресе в формате:
+   `https://admin.yandex.ru/company/{ID_организации}/profile`
+4. Скопируйте числовой ID из URL (например, `123456789`)
+
+## Дополнительная информация
+
+Дополнительную информацию о работе с API Яндекс 360 можно найти в [официальной документации](https://yandex.ru/dev/api360/doc/ru/)
+
+## Дальнейшее развитие проекта
+
+- Добавление полной поддержки OAuth аутентификации
+- Реализация управления группами и подразделениями
+- Добавление управления доменами
+- Разработка интерфейса для работы с правилами обработки писем
+- Внедрение аудита и логирования действий
+
+## Лицензия
+
+MIT

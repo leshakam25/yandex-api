@@ -49,7 +49,7 @@ export default function Home() {
                   Технические детали и информация о реализации проекта
                 </p>
                 <a 
-                  href="https://github.com/yourusername/yandex-api" 
+                  href="https://github.com/leshakam25/yandex-api" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="inline-flex items-center text-sm font-medium text-green-700 hover:text-green-900"
